@@ -1,0 +1,8 @@
+# Used by GitHub Actions CI to run unit tests and lint. PySpark itself is
+# NOT required here -- the CI tests only exercise the pure-Python modules
+# (src/quality/expectations.py, src/transform/rfm_logic.py). The PySpark
+# scripts run on Databricks compute, which already provides pyspark.
+pytest==8.3.3
+ruff==0.7.4
+faker==30.8.2
+pandas==2.2.3

@@ -1,0 +1,31 @@
+# Databricks Asset Bundle entry point.
+# Deploy with:  databricks bundle deploy -t dev
+# Run with:     databricks bundle run retail_lakehouse_pipeline -t dev
+#
+# Free Edition workspaces are serverless-only and have a single
+# workspace/metastore per account -- the "dev" target below is written
+# for that: no cluster definitions, tasks run on serverless compute.
+
+bundle:
+  name: retail-lakehouse-pipeline
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog_name:
+    description: Unity Catalog catalog these pipeline tables read/write to
+    default: retail_lakehouse
+  landing_path:
+    description: Volume path where the stream simulator writes new order files
+    default: /Volumes/retail_lakehouse/bronze/order_stream_landing/
+
+targets:
+  dev:
+    mode: development
+    default: true
+    # workspace.host is intentionally omitted -- supply it via the
+    # DATABRICKS_HOST environment variable (or a CLI profile) instead of
+    # hardcoding it here, so this file stays safe to commit publicly.
+    # workspace:
+    #   host: https://<your-workspace-url>.cloud.databricks.com
