@@ -13,9 +13,9 @@ resources:
         into silver, and produces gold business aggregates.
 
       schedule:
-        quartz_cron_expression: "0 0 * * * ?" # hourly, on the hour
+        quartz_cron_expression: "0 0 * * * ?"
         timezone_id: UTC
-        pause_status: PAUSED # flip to UNPAUSED once you've validated a manual run
+        pause_status: PAUSED
 
       parameters:
         - name: catalog_name
@@ -23,18 +23,29 @@ resources:
         - name: landing_path
           default: ${var.landing_path}
 
+      environments:
+        - environment_key: default
+          spec:
+            client: "1"
+            dependencies:
+              - faker
+              - pandas
+
       tasks:
         - task_key: simulate_live_orders
+          environment_key: default
           spark_python_task:
             python_file: ../src/ingestion/stream_simulator.py
             parameters: ["{{job.parameters.landing_path}}", "50"]
 
         - task_key: bronze_batch_ingest
+          environment_key: default
           spark_python_task:
             python_file: ../src/ingestion/bronze_ingest.py
             parameters: ["{{job.parameters.catalog_name}}"]
 
         - task_key: bronze_stream_orders
+          environment_key: default
           depends_on:
             - task_key: simulate_live_orders
           spark_python_task:
@@ -42,6 +53,7 @@ resources:
             parameters: ["{{job.parameters.catalog_name}}", "{{job.parameters.landing_path}}"]
 
         - task_key: silver_transform
+          environment_key: default
           depends_on:
             - task_key: bronze_batch_ingest
             - task_key: bronze_stream_orders
@@ -50,6 +62,7 @@ resources:
             parameters: ["{{job.parameters.catalog_name}}"]
 
         - task_key: gold_transform
+          environment_key: default
           depends_on:
             - task_key: silver_transform
           spark_python_task:
