@@ -1,6 +1,6 @@
 # Retail Lakehouse Data Engineering Pipeline
 
-An end-to-end data engineering pipeline built on **Databricks (Free Edition)**, using the
+An end-to-end data engineering pipeline built on **Databricks **, using the
 **medallion architecture** (bronze -> silver -> gold), orchestrated with **Databricks Workflows**,
 version-controlled and deployed via **GitHub + GitHub Actions + Databricks Asset Bundles**.
 
